@@ -1,66 +1,58 @@
-> Default dev port is now `8080`
-# Svelte + TS + Tailwind 3.0 app
+# Governance Aggregator Light Client
 
-This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/colinbate/svelte-ts-tailwind-template and is based on the official Svelte template with TypeScript pre-enabled and Tailwind CSS configured. Uses Tailwind CSS 3.0, which now uses
-the JIT compiler by default.
+A Svelte + Tailwind + TypeScript web app that aggregates governance proposals from public endpoints without a local database.
 
-> Note that this isn't a SvelteKit app, this is a vanilla Svelte template with the above mentioned technologies pre-installed.
+## What this build does
 
-To create a new project based on this template using [degit](https://github.com/Rich-Harris/degit):
+- Pulls proposals directly from open APIs in-browser (no backend indexer).
+- Automatically excludes passed/closed proposals from the main feed.
+- Lets validators set a validator name and chain scope; the dashboard only loads/shows those chains.
+- Includes a historical proposals section (closed votes) for retrospective governance review.
+- Includes live adapters for:
+  - Cosmos Hub, Osmosis, Stargaze, Secret Network, Akash, Juno, Injective, Stride, Celestia, Sei, Kava (Cosmos LCD)
+  - Ethereum, BNB Chain, Cardano, Algorand, Solana, Polygon (Snapshot spaces)
+  - XRP Ledger, TRON, Polkadot, Internet Computer, Monero, Filecoin (tracked, with explicit no-proposal notes when no feed is available)
+  - Tezos (TzKT)
+  - Bitcoin (BIPs index)
+- Shows exactly which top-chain targets are still uncovered so adapter work can be prioritized transparently.
+- SEO and crawlability basics included (`robots.txt`, `sitemap.xml`, metadata).
 
-```bash
-npx degit colinbate/svelte-ts-tailwind-template svelte-app
-cd svelte-app
-```
-
-Alternatively, if you are currently on GitHub, you can click the "Use this template" button at the top of this page.
-
-*Note that you will need to have [Node.js](https://nodejs.org) >=12.13 installed.*
-
-## Get started
-
-Install the dependencies...
+## Run locally
 
 ```bash
-cd svelte-app
 npm install
-```
-
-...then start [Rollup](https://rollupjs.org):
-
-```bash
 npm run dev
 ```
 
-> **Default port change!** To avoid a conflict with Apple systems on port 5000.
+Then open `http://localhost:8080`.
 
-Navigate to [localhost:8080](http://localhost:8080). You should see your app running. Edit a component file in `src`, save it, and reload the page to see your changes.
-
-By default, the server will only respond to requests from localhost. To allow connections from other computers, edit the `sirv` commands in package.json to include the option `--host 0.0.0.0`.
-
-
-## Building and running in production mode
-
-To create an optimised version of the app:
+## Build
 
 ```bash
 npm run build
+npm run start
 ```
 
-You can run the newly built app with `npm run start`. This uses [sirv](https://github.com/lukeed/sirv), which is included in your package.json's `dependencies` so that the app will work when you deploy to platforms like [Heroku](https://heroku.com).
+## Validation commands
 
-
-## Single-page app mode
-
-By default, sirv will only respond to requests that match files in `public`. This is to maximise compatibility with static fileservers, allowing you to deploy your app anywhere.
-
-If you're building a single-page app (SPA) with multiple routes, sirv needs to be able to respond to requests for *any* path. You can make it so by editing the `"start"` command in package.json:
-
-```js
-"start": "sirv public --single"
+```bash
+npm run check
+npm run lint
+npm run format:check
+npm run test
 ```
 
-## Using TypeScript
+## Test layers
 
-TypeScript has already been enabled in this template.
+- Unit tests: `tests/unit`
+- Integration tests: `tests/integration`
+- Playwright specs: `tests/playwright`
 
+## Notes
+
+- CoinGecko is used as the chain reference source; when governance endpoints are unavailable, the app still lists the chain and clearly marks no active proposal feed.
+
+- Data freshness depends on each public source endpoint.
+- Some sources may occasionally fail due to endpoint-side CORS/rate limits.
+- Chain support is adapter-driven in `src/lib/sources.ts`; uncovered top chains are surfaced in the UI so gaps are explicit.
+- `lint:eslint`, `format`, and `test:e2e` require external packages (`eslint`, `prettier`, `@playwright/test`) when available in CI/dev environments.

@@ -6,7 +6,15 @@
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "start": "sirv public",
-    "check": "svelte-check --tsconfig ./tsconfig.json"
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "lint": "node scripts/lint.mjs",
+    "lint:eslint": "eslint \"*.js\" \"scripts/**/*.mjs\" \"tests/**/*.mjs\" \"tests/**/*.js\"",
+    "format:check": "node scripts/format-check.mjs",
+    "format": "prettier --write .",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "node --test tests/unit/*.test.mjs",
+    "test:integration": "node --test tests/integration/*.test.mjs",
+    "test:e2e": "playwright test"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.0.0",
