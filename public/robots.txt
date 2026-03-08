@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://governance-light-client.example.com/sitemap.xml
